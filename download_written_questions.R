@@ -15,4 +15,4 @@ wq_documents <- get_work(date_range_from="2024-01-01",
 )
 
 # write to csv file
-write.csv(wq_documents, "../written_questions_202401_202406.csv", row.names=FALSE)
+write.csv(wq_documents, "data/written_questions_202401_202406.csv", row.names=FALSE)
