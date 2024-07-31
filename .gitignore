@@ -2,3 +2,4 @@
 /.venv/
 /faiss_index*/
 hf_access_token.txt
+/model/
