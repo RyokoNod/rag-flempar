@@ -39,7 +39,8 @@ print(tokenizer.chat_template)
 # Load the model
 llm = Llama(
     model_path="./model/aya-23-8B-Q6_K.gguf",
-    n_ctx=8192  # max number of tokens for aya-23-8B
+    n_ctx=8192,  # max number of tokens for aya-23-8B
+    verbose=False
 )
 
 # Let's start with a basic question
