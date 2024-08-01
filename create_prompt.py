@@ -1,4 +1,4 @@
-from calculate_token_length import token_length_of_prompt, token_length_of_str
+from calculate_token_length import TokenLengthCalculator
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
 from transformers import AutoTokenizer
@@ -8,6 +8,7 @@ embedding_model = HuggingFaceEmbeddings(model_name="intfloat/multilingual-e5-sma
                                         model_kwargs={'device': 'cpu'})
 model_id = "CohereForAI/aya-23-8B"
 tokenizer = AutoTokenizer.from_pretrained(model_id)
+token_counter = TokenLengthCalculator(model_id)
 
 context_length_cutoff = 7000
 
@@ -22,14 +23,14 @@ default_system_message = {
 
 }
 
-token_length_of_prompt([default_system_message])
+token_counter.token_length_of_prompt([default_system_message])
 
 
 def create_context(list_of_search_results, context_length_cutoff):
     context_length = 0
     context = ""
     for i, search_result in enumerate(list_of_search_results):
-        context_length += token_length_of_str(search_result.page_content)
+        context_length += token_counter.token_length_of_str(search_result.page_content)
         if context_length >= context_length_cutoff:
             return context
         context = (

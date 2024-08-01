@@ -1,6 +1,6 @@
 from llama_cpp import Llama
 from transformers import AutoTokenizer
-from calculate_token_length import token_length_of_prompt
+from calculate_token_length import TokenLengthCalculator
 
 # In https://huggingface.co/bartowski/aya-23-8B-GGUF, it says aya has 8192 context limit
 # Is that true? What does its tokenizer say?
@@ -116,8 +116,9 @@ test_prompt = [
         }
     ]
 
-token_length_full = token_length_of_prompt(test_prompt)
-token_length_system = token_length_of_prompt([test_prompt[0]])
-token_length_user = token_length_of_prompt([test_prompt[1]])
+token_counter = TokenLengthCalculator(model_id)
+token_length_full = token_counter.token_length_of_prompt(test_prompt)
+token_length_system = token_counter.token_length_of_prompt([test_prompt[0]])
+token_length_user = token_counter.token_length_of_prompt([test_prompt[1]])
 
 token_length_system + token_length_user
