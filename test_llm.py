@@ -1,5 +1,6 @@
 from llama_cpp import Llama
 from transformers import AutoTokenizer
+from calculate_token_length import token_length_of_prompt
 
 # In https://huggingface.co/bartowski/aya-23-8B-GGUF, it says aya has 8192 context limit
 # Is that true? What does its tokenizer say?
@@ -37,54 +38,86 @@ print(tokenizer.chat_template)
 
 # Load the model
 llm = Llama(
-      model_path="./model/aya-23-8B-Q6_K.gguf",
-      n_ctx=8192 # max number of tokens for aya-23-8B
+    model_path="./model/aya-23-8B-Q6_K.gguf",
+    n_ctx=8192  # max number of tokens for aya-23-8B
 )
 
 # Let's start with a basic question
 response = llm.create_chat_completion(
-            messages=[
-    {
-        "role": "user",
-        "content": "What is the capital of France?"
-    }
-]
-            )
+    messages=[
+        {
+            "role": "user",
+            "content": "Where are the Olympic games being held in 2024?"
+        }
+    ]
+)
 
+# Let's do a simplified, make-believe RAG with fake information
+fake_response = llm.create_chat_completion(
+    messages=[
+        {
+            "role": "user",
+            "content": "Where are the Olympic games being held in 2024?"
+                       "Context: Due to a global outbreak of COVID-20, "
+                       "the next epidemic after the 2020 COVID-19 pandemic, the 2024 Olympic games have been canceled."
+                       "The next summer Olympics will be held in Los Angeles in 2028."
+        }
+    ]
+)
 
+# Can you do that in Dutch?
+response_nl = llm.create_chat_completion(
+    messages=[
+        {
+            "role": "system",
+            "content":  "You are Command-R, a brilliant, sophisticated, AI-assistant "
+                        "trained to assist human users by providing thorough responses."
+                        "Your users are from Flanders, so make sure you answer using Flemish."
+        },
+        {
+            "role": "user",
+            "content": "Where are the Olympic games being held in 2024?"
+        }
+    ]
+)
 
+# Can you do the fake thing in Dutch?
+fake_response_nl = llm.create_chat_completion(
+    messages=[
+        {
+            "role": "system",
+            "content":  "You are Command-R, a brilliant, sophisticated, AI-assistant "
+                        "trained to assist human users by providing thorough responses."
+                        "Your users are from Flanders, so make sure you answer using Flemish."
+        },
+        {
+            "role": "user",
+            "content": "Where are the Olympic games being held in 2024?"
+                       "Context: Due to a global outbreak of COVID-20, "
+                       "the next epidemic after the 2020 COVID-19 pandemic, the 2024 Olympic games have been canceled."
+                       "The next summer Olympics will be held in Los Angeles in 2028."
+        }
+    ]
+)
 
+test_prompt = [
+        {
+            "role": "system",
+            "content":  "You are Command-R, a brilliant, sophisticated, AI-assistant "
+                        "trained to assist human users by providing thorough responses."
+                        "Your users are from Flanders, so make sure you answer using Flemish."
+        },
+        {
+            "role": "user",
+            "content": "Where are the Olympic games being held in 2024?"
+                       "Context: Due to a global outbreak of COVID-20, "
+                       "the next epidemic after the 2020 COVID-19 pandemic, the 2024 Olympic games have been canceled."
+                       "The next summer Olympics will be held in Los Angeles in 2028."
+        }
+    ]
 
+token_length_full = token_length_of_prompt(test_prompt)
+token_length_system = token_length_of_prompt([test_prompt[0]])
+token_length_user = token_length_of_prompt([test_prompt[1]])
 
-
-
-def create_prompt(user_question, context):
-    """
-    Create a prompt for the aya-23-8B model.
-
-    Args:
-    - user_question (str): The user's question or input.
-    - context (str): The context for the question.
-
-    Returns:
-    - dict: The formatted prompt for the model.
-    """
-    prompt = [{
-        "role": "user",
-        "content": f"Answer the user question or input using the following context.\n"
-                   f"If the answer you are looking for cannot be found in the context, "
-                   f"say you don't know instead of making up an answer.\n"
-                   f"The user question or input can be given in English or Flemish, "
-                   f"but the context will always be Flemish.\n"
-                   f"Make sure you answer in the same language as the user question.\n"
-                   f"User question (answer in this language): {user_question}\n"
-                   f"Context: {context}"
-    }]
-    return prompt
-
-# Example usage:
-user_question = "What is the capital of France?"
-context = "De hoofdstad van Frankrijk is Parijs."
-prompt = create_prompt(user_question, context)
-print(prompt)
-
+token_length_system + token_length_user
