@@ -27,8 +27,7 @@ default_system_message = {
                "The language of your answer should match the user question, not the context."
                "For each user question, you will be given some data, which are snippets of"
                "dictations from the Flemish Parliament. Try to answer the user question"
-               "using the data. If the answer is not found in the data, answer"
-               "'I am sorry, that information is not found in my data.'"
+               "using the data. If the answer is not found in the data, say so instead of making up an answer."
 
 }
 
@@ -96,9 +95,12 @@ def log_response(prompt, response):
     log_data = {
         "timestamp": datetime.datetime.now().isoformat(),
         "prompt": prompt,
-        "response": list(response)
+        "response": {
+            "role": "assistant",
+            "content": response
+        }
     }
-    with open("llm_logs.jsonl", "a") as log_file:
+    with open("aya-23-8B-logs.jsonl", "a") as log_file:
         log_file.write(json.dumps(log_data) + "\n")
 
 
@@ -125,18 +127,17 @@ def main(faiss_index: str, log: bool) -> None:
     # get the response to the user question
     response = llm.create_chat_completion(prompt, temperature=0, stream=True)
 
-    req = ""
+    response_content = ""
     for chunk in response:
         delta = chunk["choices"][0]["delta"]
         if "content" not in delta:
             continue
-        tokens = delta['content'].split()
-        for token in tokens:
-            print(token, end=" ", flush=True)
+        response_content += delta["content"]
+        print(delta["content"], end="", flush=True)
 
     # Log the prompt and response if logging is enabled
     if log:
-        log_response(prompt, response)
+        log_response(prompt, response_content)
 
 
 if __name__ == '__main__':
