@@ -3,4 +3,4 @@
 /faiss_index*/
 hf_access_token.txt
 /model/
-/llm_logs.jsonl
+/*_logs.jsonl
