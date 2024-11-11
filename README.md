@@ -26,11 +26,22 @@ Run like below from the command line (the command is for Linux and MacOS).
 python3 path_to_flempar_download.csv
 ```
 
-### 4. calculate_token_length.py
+If you are using the exact same input as us, the command would be
+
+```commandline
+python3 create_vector_store.py data/written_questions_202401_202406.csv 
+```
+
+### 4. faiss_index_written_questions_202401_202406
+
+The FAISS index created after we run `create_vector_store.py` using `data/written_questions_202401_202406.csv`
+as input.
+
+### 5. calculate_token_length.py
 
 A helper module that calculates the approximate number of tokens included in a text or prompt.
 
-### 5. rag_aya.py
+### 6. rag_aya.py
 
 The actual RAG pipeline. To use the pipeline, execute as below (the `--log` argument is optional).
 
@@ -38,7 +49,7 @@ The actual RAG pipeline. To use the pipeline, execute as below (the `--log` argu
 python3 rag_aya.py path_to_faiss_index --log
 ```
 
-### 6. aya-23-8B-logs.jsonl
+### 7. aya-23-8B-logs.jsonl
 
 The log file where the user input, context, and the response is stored if you set the `--log` argument
 when running `rag_aya.py`.
