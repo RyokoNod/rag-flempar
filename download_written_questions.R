@@ -1,9 +1,8 @@
 # How to run from the command line: Rscript download_written_questions.R
 
-# Uncomment these lines before execution if you don't have them installed yet
-#require(devtools)
-#install_github("PolscienceAntwerp/flempar")
-#install.packages("dplyr")
+require(devtools)
+install_github("PolscienceAntwerp/flempar")
+install.packages("dplyr")
 library(flempar)
 library(dplyr)
 
