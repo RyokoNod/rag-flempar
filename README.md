@@ -54,3 +54,8 @@ python3 rag_aya.py path_to_faiss_index --log
 The log file where the user input, context, and the response is stored if you set the `--log` argument
 when running `rag_aya.py`.
 
+## Test scripts
+
+These files don't affect the RAG pipeline, but are handy to test the components and the complete RAG pipeline.
+
+- `test_vector_store.py`
