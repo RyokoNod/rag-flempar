@@ -11,3 +11,6 @@ db = FAISS.load_local("faiss_index_written_questions_202401_202406", embeddings=
 # so this will fetch the top 4 (default setting)
 docs = db.similarity_search("housing costs in Flanders")
 
+for doc in docs:
+    print(doc.page_content)
+
