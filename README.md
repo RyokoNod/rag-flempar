@@ -1,4 +1,4 @@
-# Creating a RAG pipeline from Flemish parliament discussinos
+# Creating a RAG pipeline from Flemish parliament discussions
 
 This is a repository linked to Datamarinier's [blog series about creating a RAG pipeline](https://medium.com/@Datamarinier/making-an-api-out-of-a-hugging-face-model-introduction-a0c4b2408f52).
 By using the files here, you will be able to follow and recreate the proof of concept described in the posts.
